@@ -1,0 +1,31 @@
+name: Build Mod
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Unzip Source
+      run: |
+        mkdir project
+        unzip mod.zip -d project/
+
+    - name: Setup Java 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Build Mod
+      run: |
+        cd project
+        chmod +x gradlew
+        ./gradlew build
+
+    - name: Upload Jar File
+      uses: actions/upload-artifact@v4
+      with:
+        name: Mace-Customizer-Mod
+        path: project/build/libs/*.jar
